@@ -75,6 +75,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
         .product-card {
             text-align: center;
         }
+        .product-card img {
+            width: 100%;
+            height: 200px; /* Altura fixa para todas as imagens */
+            object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
         .cart-summary {
             background-color: var(--card-background);
             padding: 2rem;
@@ -89,8 +96,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
             margin-bottom: 1rem;
         }
         .cart-item img {
-            width: 50px;
-            height: 50px;
+            width: 60px; /* Aumentando um pouco para melhor visualização */
+            height: 60px;
+            object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
             border-radius: 5px;
             margin-right: 1rem;
         }
