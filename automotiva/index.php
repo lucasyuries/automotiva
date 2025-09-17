@@ -26,6 +26,7 @@
                     <li><a href="#sobre">Sobre Nós</a></li>
                     <li><a href="#depoimentos">Depoimentos</a></li>
                     <li><a href="#contato">Contato</a></li>
+                    <li><a href="carrinho.php" class="cart-icon"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/shopping-cart.png" alt="Carrinho de Compras"/></a></li>
                 </ul>
             </nav>
         </div>

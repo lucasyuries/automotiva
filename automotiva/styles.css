@@ -64,6 +64,7 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .logo {
@@ -73,10 +74,16 @@ section {
     text-decoration: none;
 }
 
+.nav {
+    display: flex;
+    align-items: center;
+}
+
 .nav-menu {
     list-style: none;
     display: flex;
     gap: 1.5rem;
+    align-items: center;
 }
 
 .nav-menu a {
@@ -85,6 +92,21 @@ section {
     font-weight: 500;
     position: relative;
     transition: color 0.3s ease;
+}
+
+.nav-menu a.cart-icon {
+    display: inline-block;
+    line-height: 1;
+}
+
+.nav-menu a.cart-icon img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.nav-menu a.cart-icon:hover img {
+    transform: scale(1.1);
 }
 
 .nav-menu a::after {
@@ -96,6 +118,10 @@ section {
     left: 0;
     background-color: var(--primary-color);
     transition: width 0.3s ease;
+}
+
+.nav-menu a:not(.cart-icon):hover::after {
+    width: 100%;
 }
 
 .nav-menu a:hover {
