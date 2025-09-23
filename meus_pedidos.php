@@ -77,37 +77,33 @@ try {
                             </div>
 
                             <div class="order-items-list">
-                                <h4>Itens do Pedido:</h4>
-                                <div class="order-items-grid">
-                                    <?php
-                                    // 3. BUSCA SECUNDÁRIA: Para cada pedido, busca os itens correspondentes
-                                    try {
-                                        $sql_itens = "SELECT pi.quantidade, pi.preco_unitario, pr.nome, pr.imagem_url 
-                                                      FROM pedido_itens pi 
-                                                      JOIN produtos pr ON pi.id_produto = pr.id 
-                                                      WHERE pi.id_pedido = :id_pedido";
-                                        $stmt_itens = $pdo->prepare($sql_itens);
-                                        $stmt_itens->execute(['id_pedido' => $pedido['id']]);
-                                        $itens = $stmt_itens->fetchAll();
+                                <?php
+                                try {
+                                    $sql_itens = "SELECT pi.quantidade, pi.preco_unitario, pr.nome, pr.imagem_url 
+                                                  FROM pedido_itens pi 
+                                                  JOIN produtos pr ON pi.id_produto = pr.id 
+                                                  WHERE pi.id_pedido = :id_pedido";
+                                    $stmt_itens = $pdo->prepare($sql_itens);
+                                    $stmt_itens->execute(['id_pedido' => $pedido['id']]);
+                                    $itens = $stmt_itens->fetchAll();
 
-                                        foreach ($itens as $item):
-                                    ?>
-                                        <div class="order-item">
-                                            <img src="<?= htmlspecialchars($item['imagem_url']) ?>" alt="<?= htmlspecialchars($item['nome']) ?>">
-                                            <div class="order-item-details">
-                                                <span class="item-name"><?= htmlspecialchars($item['nome']) ?></span>
-                                                <span class="item-qty-price">
-                                                    <?= $item['quantidade'] ?> un. x R$ <?= number_format($item['preco_unitario'], 2, ',', '.') ?>
-                                                </span>
-                                            </div>
+                                    foreach ($itens as $item):
+                                ?>
+                                    <div class="order-item">
+                                        <img src="<?= htmlspecialchars($item['imagem_url']) ?>" alt="<?= htmlspecialchars($item['nome']) ?>">
+                                        <div class="order-item-details">
+                                            <span class="item-name"><?= htmlspecialchars($item['nome']) ?></span>
+                                            <span class="item-qty-price">
+                                                <?= $item['quantidade'] ?> un. x R$ <?= number_format($item['preco_unitario'], 2, ',', '.') ?>
+                                            </span>
                                         </div>
-                                    <?php
-                                        endforeach;
-                                    } catch (PDOException $e) {
-                                        echo "<p>Erro ao buscar itens do pedido.</p>";
-                                    }
-                                    ?>
-                                </div>
+                                    </div>
+                                <?php
+                                    endforeach;
+                                } catch (PDOException $e) {
+                                    echo "<p>Erro ao buscar itens do pedido.</p>";
+                                }
+                                ?>
                             </div>
                         </article>
                     <?php endforeach; ?>
