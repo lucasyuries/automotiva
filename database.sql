@@ -67,3 +67,7 @@ CREATE TABLE IF NOT EXISTS contatos (
     data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lido TINYINT(1) DEFAULT 0 COMMENT '0 = não lido, 1 = lido'
 ) ENGINE=InnoDB;
+
+
+-- (Dados de exemplo para produtos aqui...)-- (Dados de exemplo para produtos aqui...)
+-- (Dados de exemplo para produtos aqui...)
