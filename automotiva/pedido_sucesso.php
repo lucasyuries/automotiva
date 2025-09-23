@@ -1,8 +1,9 @@
 <?php
 session_start();
+require_once 'config.php'; // Adicionado para buscar o nome do usuário para o header
 
 // Protege a página: só pode ser acessada se um pedido foi finalizado com sucesso
-if (!isset($_SESSION['ultimo_pedido_id'])) {
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['ultimo_pedido_id'])) {
     header('Location: index.php');
     exit();
 }
@@ -18,43 +19,10 @@ unset($_SESSION['ultimo_pedido_id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedido Confirmado! - Automotiva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .success-section {
-            padding-top: 120px;
-            text-align: center;
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .success-container {
-            background-color: #fff;
-            padding: 3rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 600px;
-        }
-        .success-container h1 {
-            color: #28a745; /* Verde sucesso */
-            margin-bottom: 1rem;
-        }
-        .success-container p {
-            font-size: 1.1rem;
-            color: #333;
-            line-height: 1.6;
-        }
-        .order-number {
-            font-weight: bold;
-            color: #c00000;
-            font-size: 1.2rem;
-        }
-        .cta-button {
-            margin-top: 2rem;
-            display: inline-block;
-            padding: 0.8rem 2rem;
-        }
-    </style>
 </head>
 <body>
 
@@ -63,8 +31,16 @@ unset($_SESSION['ultimo_pedido_id']);
             <a href="index.php" class="logo">Automotiva</a>
             <nav class="nav">
                 <ul class="nav-menu">
+                    <li><a href="index.php#servicos">Serviços</a></li>
                     <li><a href="index.php#produtos">Produtos</a></li>
-                    <li><a href="logout.php">Sair</a></li>
+                    <?php if (isset($_SESSION['id_usuario'])): ?>
+                        <li><a href="meus_pedidos.php">Meus Pedidos</a></li>
+                        <li><a href="logout.php?action=logout">Sair</a></li>
+                        <li class="user-greeting">Olá, <?php echo htmlspecialchars(explode(' ', $_SESSION['nome_usuario'])[0]); ?></li>
+                    <?php else: ?>
+                        <li><a href="login.php">Login</a></li>
+                    <?php endif; ?>
+                    <li><a href="carrinho.php" class="cart-icon"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/shopping-cart.png" alt="Carrinho de Compras"/></a></li>
                 </ul>
             </nav>
         </div>
@@ -77,8 +53,9 @@ unset($_SESSION['ultimo_pedido_id']);
                     <h1>Pedido Realizado com Sucesso!</h1>
                     <p>Obrigado por comprar na Automotiva! Seu pedido foi recebido e já está sendo processado.</p>
                     <p>O número do seu pedido é: <span class="order-number">#<?= htmlspecialchars($id_pedido) ?></span></p>
-                    <p>Enviamos um e-mail de confirmação com todos os detalhes da sua compra.</p>
-                    <a href="index.php" class="cta-button">Voltar à Página Inicial</a>
+                    <p>Você pode acompanhar o status do seu pedido na página "Meus Pedidos".</p>
+                    <a href="meus_pedidos.php" class="cta-button">Ver Meus Pedidos</a>
+                    <a href="index.php" class="cta-button secondary">Voltar à Página Inicial</a>
                 </div>
             </div>
         </section>

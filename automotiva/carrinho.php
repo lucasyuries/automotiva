@@ -12,124 +12,6 @@ require_once 'config.php';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .cart-section {
-            padding-top: 120px;
-            padding-bottom: 4rem;
-        }
-        .cart-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-        .products-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .product-card {
-            text-align: center;
-        }
-        .product-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-        }
-        .cart-summary {
-            background-color: var(--card-background);
-            padding: 2rem;
-            border-radius: 8px;
-            position: sticky;
-            top: 120px;
-        }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .cart-item img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-right: 1rem;
-        }
-        .cart-item-info {
-            flex-grow: 1;
-        }
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-        }
-        .quantity-controls button {
-            background: #444;
-            color: #fff;
-            border: none;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            line-height: 1;
-        }
-        .quantity-controls span {
-            padding: 0 1rem;
-            font-weight: 500;
-        }
-        .remove-btn {
-            background: none;
-            border: none;
-            color: #E50914;
-            cursor: pointer;
-            font-size: 1.5rem;
-            margin-left: 1rem;
-        }
-        .cart-total {
-            margin-top: 1.5rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: right;
-            border-top: 1px solid #333;
-            padding-top: 1rem;
-        }
-        .empty-cart-btn {
-            background-color: #555;
-            margin-top: 1rem;
-            width: 100%;
-        }
-        .empty-cart-btn:hover {
-            background-color: #777;
-        }
-        .checkout-btn {
-            background-color: var(--primary-color);
-            margin-top: 1rem;
-            width: 100%;
-        }
-        .checkout-btn:hover {
-            background-color: #ff0a16;
-        }
-        .cart-actions {
-            margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        @media (max-width: 992px) {
-            .cart-container {
-                grid-template-columns: 1fr;
-            }
-            .cart-summary {
-                position: static;
-                margin-top: 2rem;
-            }
-        }
-    </style>
 </head>
 <body>
 
@@ -144,6 +26,7 @@ require_once 'config.php';
                     <li><a href="index.php#servicos">Serviços</a></li>
                     <li><a href="index.php#produtos">Produtos</a></li>
                     <?php if (isset($_SESSION['id_usuario'])): ?>
+                        <li><a href="meus_pedidos.php">Meus Pedidos</a></li>
                         <li><a href="logout.php?action=logout">Sair</a></li>
                         <li class="user-greeting">Olá, <?php echo htmlspecialchars(explode(' ', $_SESSION['nome_usuario'])[0]); ?></li>
                     <?php else: ?>
