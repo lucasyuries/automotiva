@@ -90,7 +90,17 @@ section { padding: 4rem 0; }
 .carousel { display: flex; gap: 2rem; overflow-x: auto; padding: 1rem 0; scroll-snap-type: x mandatory; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
 .carousel::-webkit-scrollbar { display: none; }
 .carousel .service-card, .carousel .product-card { flex: 0 0 320px; scroll-snap-align: start; }
-.carousel .product-card img.carousel-image { width: 100%; height: 250px; object-fit: cover; cursor: pointer; transition: transform 0.3s ease; }
+
+/* AQUI A MUDANÇA: Imagens do carrossel agora também usam 'contain' */
+.carousel .product-card img.carousel-image {
+    width: 100%;
+    height: 250px;
+    object-fit: contain; /* ALTERADO DE 'cover' PARA 'contain' */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    background-color: #2a2a2a; /* ADICIONADO para um fundo consistente */
+}
+
 .carousel .product-card img.carousel-image:hover { transform: scale(1.05); }
 .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.5); color: #fff; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 2rem; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease; }
 .carousel-btn:hover { background-color: var(--primary-color); }
@@ -117,6 +127,15 @@ section { padding: 4rem 0; }
 .cart-section { padding-top: 120px; padding-bottom: 4rem; }
 .cart-container { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
 .products-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+.products-list .product-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    background-color: #2a2a2a;
+}
 .cart-summary { background-color: var(--card-background); padding: 2rem; border-radius: 8px; position: sticky; top: 120px; }
 .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
 .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 1rem; }

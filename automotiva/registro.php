@@ -6,8 +6,47 @@ $mensagem_erro = '';
 $mensagem_sucesso = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // (Lógica PHP do formulário sem alterações)
-    // ...
+    $nome = $_POST['nome'];
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+    $senha_confirm = $_POST['senha_confirm'];
+    $data_nascimento = !empty($_POST['data_nascimento']) ? $_POST['data_nascimento'] : null;
+    $endereco = !empty($_POST['endereco']) ? $_POST['endereco'] : null;
+
+    if ($senha !== $senha_confirm) {
+        $mensagem_erro = 'As senhas não coincidem.';
+    } else {
+        try {
+            $stmt_check = $pdo->prepare('SELECT id FROM usuarios WHERE email = ?');
+            $stmt_check->execute([$email]);
+
+            if ($stmt_check->fetch()) {
+                $mensagem_erro = 'Este e-mail já está cadastrado.';
+            } else {
+                $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+                $sql_insert = 'INSERT INTO usuarios (nome, email, senha, data_nascimento, endereco) VALUES (?, ?, ?, ?, ?)';
+                $stmt_insert = $pdo->prepare($sql_insert);
+                
+                // Tenta executar a inserção
+                if ($stmt_insert->execute([$nome, $email, $senha_hash, $data_nascimento, $endereco])) {
+                    // Se deu certo, faz o login e redireciona
+                    $id_usuario = $pdo->lastInsertId();
+                    $_SESSION['id_usuario'] = $id_usuario;
+                    $_SESSION['nome_usuario'] = $nome;
+                    
+                    header("Location: index.php");
+                    exit();
+                } else {
+                    // SE FALHAR, PEGA O ERRO ESPECÍFICO DO BANCO
+                    $errorInfo = $stmt_insert->errorInfo();
+                    $mensagem_erro = "Não foi possível criar a conta. Erro do banco: " . ($errorInfo[2] ?? 'Erro desconhecido');
+                }
+            }
+        } catch (PDOException $e) {
+            // Este bloco pega outros erros de banco, como conexão
+            $mensagem_erro = "Erro de banco de dados: " . $e->getMessage();
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
