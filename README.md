@@ -74,3 +74,29 @@ Abra o terminal na pasta `htdocs` do seu XAMPP e clone o projeto.
 
 ```bash
 git clone [https://github.com/lucasyuries/automotiva.git](https://github.com/lucasyuries/automotiva.git)
+
+
+
+/automotiva
+├── vendor/               # Dependências do Composer (gerenciado automaticamente)
+├── .env                  # (Local) Configurações do ambiente (ignorado pelo Git)
+├── .env.example          # Arquivo de exemplo para as variáveis de ambiente
+├── .gitignore            # Arquivos e pastas a serem ignorados pelo Git
+├── atualizar_carrinho.php# Endpoint AJAX para o carrinho
+├── carrinho.php          # Página do carrinho de compras
+├── checkout.php          # Página de finalização da compra
+├── config.php            # Carrega .env e configura a conexão com o BD
+├── composer.json         # Define as dependências do projeto
+├── composer.lock         # Grava as versões exatas das dependências
+├── database.sql          # Script de criação do banco de dados
+├── enviar_contato.php    # Backend do formulário de contato
+├── finalizar_pedido.php  # Backend do checkout
+├── index.php             # Página inicial
+├── login.php             # Página de login
+├── logout.php            # Script de logout
+├── meus_pedidos.php      # Página de histórico de pedidos do usuário
+├── pedido_sucesso.php    # Página de confirmação de pedido
+├── README.md             # Este arquivo
+├── registro.php          # Página de registro de usuário
+├── script.js             # Lógica JavaScript do frontend
+└── styles.css            # Folha de estilos principal do site
