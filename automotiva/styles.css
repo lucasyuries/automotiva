@@ -319,6 +319,98 @@ section {
     color: var(--primary-color);
 }
 
+/* --- Seção de Formulários (Login/Registro) --- */
+.form-section {
+    padding: 8rem 0 4rem; /* Espaçamento para o header fixo */
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-wrapper {
+    background-color: var(--card-background);
+    padding: 3rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    border-top: 5px solid var(--primary-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.form-wrapper h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: var(--text-color);
+    font-family: var(--font-family);
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-wrapper .cta-button {
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+.form-link {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.form-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.form-link a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagens de erro/sucesso */
+.mensagem {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.mensagem-erro {
+    background-color: rgba(229, 9, 20, 0.2);
+    color: #f5c6cb;
+    border: 1px solid rgba(229, 9, 20, 0.5);
+}
+
+.mensagem-sucesso {
+    background-color: rgba(34, 139, 34, 0.2);
+    color: #c3e6cb;
+    border: 1px solid rgba(34, 139, 34, 0.5);
+}
+
 /* --- Responsividade (Mobile-First) --- */
 @media (max-width: 768px) {
     :root {

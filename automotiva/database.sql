@@ -89,3 +89,51 @@ SELECT * FROM (
         'https://m.media-amazon.com/images/I/61tc0A9gAVL.__AC_SY300_SX300_QL70_ML2_.jpg'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM produtos);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `usuarios`
+--
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    data_nascimento DATE,
+    endereco TEXT,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `pedidos`
+--
+
+CREATE TABLE IF NOT EXISTS pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    valor_total DECIMAL(10, 2) NOT NULL,
+    metodo_pagamento ENUM('cartao', 'vista') NOT NULL,
+    status VARCHAR(50) DEFAULT 'Pendente',
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+) ENGINE=InnoDB;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `pedido_itens`
+--
+
+CREATE TABLE IF NOT EXISTS pedido_itens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    id_produto INT NOT NULL,
+    quantidade INT NOT NULL,
+    preco_unitario DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id),
+    FOREIGN KEY (id_produto) REFERENCES produtos(id)
+) ENGINE=InnoDB;

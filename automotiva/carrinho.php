@@ -2,6 +2,35 @@
 session_start();
 require_once 'config.php';
 
+// Lógica para ATUALIZAR a quantidade do produto
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_quantity'])) {
+    $product_id = $_POST['product_id'];
+    $action = $_POST['action'];
+
+    if (isset($_SESSION['cart'][$product_id])) {
+        if ($action == 'increase') {
+            $_SESSION['cart'][$product_id]['quantity']++;
+        } elseif ($action == 'decrease') {
+            $_SESSION['cart'][$product_id]['quantity']--;
+            if ($_SESSION['cart'][$product_id]['quantity'] <= 0) {
+                unset($_SESSION['cart'][$product_id]);
+            }
+        }
+    }
+    header("Location: carrinho.php");
+    exit;
+}
+
+// Lógica para REMOVER produto do carrinho
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remove_item'])) {
+    $product_id = $_POST['product_id'];
+    if (isset($_SESSION['cart'][$product_id])) {
+        unset($_SESSION['cart'][$product_id]);
+    }
+    header("Location: carrinho.php");
+    exit;
+}
+
 // Lógica para adicionar produto ao carrinho
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
     $product_id = $_POST['product_id'];
@@ -94,13 +123,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
         .cart-item img {
-            width: 60px; /* Aumentando um pouco para melhor visualização */
+            width: 60px;
             height: 60px;
-            object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+            object-fit: cover;
             border-radius: 5px;
             margin-right: 1rem;
+        }
+        .cart-item-info {
+            flex-grow: 1;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-controls button {
+            background: #ddd;
+            border: none;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .quantity-controls span {
+            padding: 0 1rem;
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #c00000;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 1rem;
         }
         .cart-total {
             margin-top: 1.5rem;
@@ -115,6 +171,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
         }
         .empty-cart-btn:hover {
             background-color: #777;
+        }
+        .checkout-btn {
+            background-color: #c00000;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        .checkout-btn:hover {
+            background-color: #a00000;
+        }
+        .cart-actions {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* --- Responsividade para o Carrinho --- */
+        @media (max-width: 992px) {
+            .cart-container {
+                grid-template-columns: 1fr; /* Coluna única em telas menores */
+            }
+            .cart-summary {
+                position: static; /* Remove o comportamento fixo */
+                margin-top: 2rem;
+            }
         }
     </style>
 </head>
@@ -133,6 +214,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
                     <li><a href="index.php#sobre">Sobre Nós</a></li>
                     <li><a href="index.php#depoimentos">Depoimentos</a></li>
                     <li><a href="index.php#contato">Contato</a></li>
+                    <?php if (isset($_SESSION['id_usuario'])): ?>
+                        <li><a href="logout.php">Sair</a></li>
+                        <li class="user-greeting">Olá, <?php echo htmlspecialchars(explode(' ', $_SESSION['nome_usuario'])[0]); ?></li>
+                    <?php else: ?>
+                        <li><a href="login.php">Login</a></li>
+                    <?php endif; ?>
                     <li><a href="carrinho.php" class="cart-icon"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/shopping-cart.png" alt="Carrinho de Compras"/></a></li>
                 </ul>
             </nav>
@@ -179,21 +266,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
                         <?php else: ?>
                             <?php
                             $total = 0;
-                            foreach ($_SESSION['cart'] as $item):
+                            foreach ($_SESSION['cart'] as $id => $item):
                                 $total += $item['price'] * $item['quantity'];
                             ?>
                                 <div class="cart-item">
                                     <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>">
-                                    <span><?= htmlspecialchars($item['name']) ?> (x<?= $item['quantity'] ?>)</span>
-                                    <span>R$ <?= number_format($item['price'] * $item['quantity'], 2, ',', '.') ?></span>
+                                    <div class="cart-item-info">
+                                        <span><?= htmlspecialchars($item['name']) ?></span><br>
+                                        <span>R$ <?= number_format($item['price'], 2, ',', '.') ?></span>
+                                    </div>
+                                    <div class="quantity-controls">
+                                        <form method="post" action="carrinho.php" style="display: inline;">
+                                            <input type="hidden" name="product_id" value="<?= $id ?>">
+                                            <input type="hidden" name="action" value="decrease">
+                                            <button type="submit" name="update_quantity">-</button>
+                                        </form>
+                                        <span><?= $item['quantity'] ?></span>
+                                        <form method="post" action="carrinho.php" style="display: inline;">
+                                            <input type="hidden" name="product_id" value="<?= $id ?>">
+                                            <input type="hidden" name="action" value="increase">
+                                            <button type="submit" name="update_quantity">+</button>
+                                        </form>
+                                    </div>
+                                    <form method="post" action="carrinho.php">
+                                        <input type="hidden" name="product_id" value="<?= $id ?>">
+                                        <button type="submit" name="remove_item" class="remove-btn" title="Remover item">&times;</button>
+                                    </form>
                                 </div>
                             <?php endforeach; ?>
                             <div class="cart-total">
                                 Total: R$ <?= number_format($total, 2, ',', '.') ?>
                             </div>
-                            <form method="post" action="carrinho.php">
-                                <button type="submit" name="clear_cart" class="cta-button empty-cart-btn">Limpar Carrinho</button>
-                            </form>
+                            <div class="cart-actions">
+                                <a href="checkout.php" class="cta-button checkout-btn">Finalizar Compra</a>
+                                <form method="post" action="carrinho.php">
+                                    <button type="submit" name="clear_cart" class="cta-button empty-cart-btn">Limpar Carrinho</button>
+                                </form>
+                            </div>
                         <?php endif; ?>
                     </aside>
                 </div>

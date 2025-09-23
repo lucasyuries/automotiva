@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <?php require_once 'config.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -26,6 +27,12 @@
                     <li><a href="#sobre">Sobre Nós</a></li>
                     <li><a href="#depoimentos">Depoimentos</a></li>
                     <li><a href="#contato">Contato</a></li>
+                    <?php if (isset($_SESSION['id_usuario'])): ?>
+                        <li><a href="logout.php">Sair</a></li>
+                        <li class="user-greeting">Olá, <?php echo htmlspecialchars(explode(' ', $_SESSION['nome_usuario'])[0]); ?></li>
+                    <?php else: ?>
+                        <li><a href="login.php">Login</a></li>
+                    <?php endif; ?>
                     <li><a href="carrinho.php" class="cart-icon"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/shopping-cart.png" alt="Carrinho de Compras"/></a></li>
                 </ul>
             </nav>
