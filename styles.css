@@ -1,4 +1,6 @@
-/* --- Reset e Variáveis --- */
+/* ==========================================================================
+   1. RESET E VARIÁVEIS GLOBAIS
+   ========================================================================== */
 :root {
     --primary-color: #E50914;
     --secondary-color: #141414;
@@ -26,6 +28,9 @@ body {
     line-height: 1.6;
 }
 
+/* ==========================================================================
+   2. ESTILOS GERAIS E DE LAYOUT
+   ========================================================================== */
 .container {
     width: 100%;
     max-width: 1200px;
@@ -33,7 +38,7 @@ body {
     padding: var(--container-padding);
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
     color: var(--primary-color);
     font-weight: 700;
     margin-bottom: 1rem;
@@ -49,7 +54,9 @@ section {
     padding: 4rem 0;
 }
 
-/* --- Header e Navegação --- */
+/* ==========================================================================
+   3. HEADER E NAVEGAÇÃO
+   ========================================================================== */
 .header {
     background-color: var(--secondary-color);
     padding: 1rem 0;
@@ -94,19 +101,8 @@ section {
     transition: color 0.3s ease;
 }
 
-.nav-menu a.cart-icon {
-    display: inline-block;
-    line-height: 1;
-}
-
-.nav-menu a.cart-icon img {
-    width: 24px;
-    height: 24px;
-    transition: transform 0.3s ease;
-}
-
-.nav-menu a.cart-icon:hover img {
-    transform: scale(1.1);
+.nav-menu a:hover {
+    color: var(--primary-color);
 }
 
 .nav-menu a::after {
@@ -124,8 +120,20 @@ section {
     width: 100%;
 }
 
-.nav-menu a:hover {
-    color: var(--primary-color);
+.user-greeting {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-left: 1rem;
+}
+
+.cart-icon img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.cart-icon:hover img {
+    transform: scale(1.1);
 }
 
 .nav-toggle {
@@ -155,33 +163,13 @@ section {
     transition: transform 0.3s ease, top 0.3s ease;
 }
 
-.hamburger::before {
-    top: -8px;
-}
+.hamburger::before { top: -8px; }
+.hamburger::after { top: 8px; }
 
-.hamburger::after {
-    top: 8px;
-}
-
-/* --- Hero Section --- */
-.hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1920x1080.png/111/FFF?text=Carro+Esportivo') no-repeat center center/cover;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    text-align: center;
-}
-
-.hero h1 {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-}
-
-.hero p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-}
-
+/* ==========================================================================
+   4. COMPONENTES REUTILIZÁVEIS (Botões, Cards, Modais)
+   ========================================================================== */
+/* --- Botões --- */
 .cta-button {
     background-color: var(--primary-color);
     color: var(--text-color);
@@ -200,13 +188,7 @@ section {
     transform: scale(1.05);
 }
 
-/* --- Seções --- */
-.testimonials-grid {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
+/* --- Cards --- */
 .service-card, .product-card, .testimonial-card {
     background-color: var(--card-background);
     padding: 2rem;
@@ -234,6 +216,87 @@ section {
     color: var(--primary-color);
 }
 
+/* --- Modais --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: var(--primary-color);
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 80vh;
+    animation: zoomIn 0.3s ease-in-out;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* --- Mensagens de Alerta --- */
+.mensagem {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.mensagem-erro {
+    background-color: rgba(229, 9, 20, 0.2);
+    color: #f5c6cb;
+    border: 1px solid rgba(229, 9, 20, 0.5);
+}
+
+.mensagem-sucesso {
+    background-color: rgba(34, 139, 34, 0.2);
+    color: #c3e6cb;
+    border: 1px solid rgba(34, 139, 34, 0.5);
+}
+
+/* ==========================================================================
+   5. SEÇÕES DA PÁGINA INICIAL
+   ========================================================================== */
+/* --- Seção Hero --- */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1920x1080.png/111/FFF?text=Carro+Esportivo') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.hero h1 { font-size: 3.5rem; margin-bottom: 1rem; }
+.hero p { font-size: 1.2rem; margin-bottom: 2rem; }
+
+/* --- Seção Sobre --- */
 .about {
     background-color: var(--secondary-color);
 }
@@ -243,13 +306,20 @@ section {
     text-align: center;
 }
 
+/* --- Seção Depoimentos --- */
+.testimonials-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
 .testimonial-card footer {
     margin-top: 1rem;
     font-style: italic;
     color: var(--primary-color);
 }
 
-/* --- Contato --- */
+/* --- Seção Contato --- */
 .contact-form {
     display: flex;
     flex-direction: column;
@@ -275,128 +345,9 @@ section {
     border-color: var(--primary-color);
 }
 
-/* --- Footer --- */
-.footer {
-    background-color: var(--secondary-color);
-    padding: 2rem 0;
-    text-align: center;
-}
-
-.footer .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-.social-links {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.social-links a {
-    color: var(--text-color);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.social-links a:hover {
-    color: var(--primary-color);
-}
-
-/* --- Seção de Formulários (Login/Registro) --- */
-.form-section {
-    padding: 8rem 0 4rem;
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.form-wrapper {
-    background-color: var(--card-background);
-    padding: 3rem;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 500px;
-    border-top: 5px solid var(--primary-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.form-wrapper h1 {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 1rem;
-    background-color: #333;
-    border: 1px solid #555;
-    border-radius: 5px;
-    color: var(--text-color);
-    font-family: var(--font-family);
-    transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
-.form-wrapper .cta-button {
-    width: 100%;
-    font-size: 1.1rem;
-}
-
-.form-link {
-    text-align: center;
-    margin-top: 1.5rem;
-}
-
-.form-link a {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.form-link a:hover {
-    text-decoration: underline;
-}
-
-/* Mensagens de erro/sucesso */
-.mensagem {
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    border-radius: 5px;
-    text-align: center;
-    font-weight: 500;
-}
-
-.mensagem-erro {
-    background-color: rgba(229, 9, 20, 0.2);
-    color: #f5c6cb;
-    border: 1px solid rgba(229, 9, 20, 0.5);
-}
-
-.mensagem-sucesso {
-    background-color: rgba(34, 139, 34, 0.2);
-    color: #c3e6cb;
-    border: 1px solid rgba(34, 139, 34, 0.5);
-}
-
-/* --- Estilos Reutilizáveis para Carrosséis --- */
+/* ==========================================================================
+   6. CARROSSÉIS
+   ========================================================================== */
 .carousel-container {
     position: relative;
     padding: 0 40px;
@@ -413,9 +364,7 @@ section {
     scrollbar-width: none;
 }
 
-.carousel::-webkit-scrollbar {
-    display: none;
-}
+.carousel::-webkit-scrollbar { display: none; }
 
 .carousel .service-card,
 .carousel .product-card {
@@ -423,7 +372,7 @@ section {
     scroll-snap-align: start;
 }
 
-.carousel .product-card img {
+.carousel .product-card img.carousel-image {
     width: 100%;
     height: 250px;
     object-fit: cover;
@@ -431,7 +380,7 @@ section {
     transition: transform 0.3s ease;
 }
 
-.carousel .product-card img:hover {
+.carousel .product-card img.carousel-image:hover {
     transform: scale(1.05);
 }
 
@@ -454,309 +403,92 @@ section {
     transition: background-color 0.3s ease;
 }
 
-.carousel-btn:hover {
-    background-color: var(--primary-color);
-}
+.carousel-btn:hover { background-color: var(--primary-color); }
+.carousel-btn.prev { left: -10px; }
+.carousel-btn.next { right: -10px; }
 
-.carousel-btn.prev {
-    left: -10px;
-}
-
-.carousel-btn.next {
-    right: -10px;
-}
-
-/* --- ESTILOS PARA O MODAL DE IMAGEM --- */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+/* ==========================================================================
+   7. PÁGINAS ESPECÍFICAS
+   ========================================================================== */
+/* --- Página: Pedido Sucesso --- */
+.success-section {
+    padding-top: 120px;
+    text-align: center;
+    min-height: 70vh;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    max-width: 90%;
-    max-height: 80vh;
-    animation: zoomIn 0.3s ease-in-out;
-}
-
-.close-modal {
-    position: absolute;
-    top: 20px;
-    right: 35px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.close-modal:hover {
-    color: var(--primary-color);
-}
-
-@keyframes zoomIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-/* --- Responsividade (Mobile-First) --- */
-@media (max-width: 768px) {
-    :root {
-        --container-padding: 0 1rem;
-    }
-
-    h1 {
-        font-size: 2.5rem;
-    }
-
-    h2 {
-        font-size: 2rem;
-    }
-
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 70%;
-        height: 100vh;
-        background-color: var(--secondary-color);
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transition: right 0.5s ease-in-out;
-        gap: 2rem;
-    }
-
-    .nav-menu.active {
-        right: 0;
-    }
-
-    .nav-toggle {
-        display: block;
-        z-index: 1001;
-    }
-
-    .nav-toggle.active .hamburger {
-        transform: rotate(45deg);
-    }
-
-    .nav-toggle.active .hamburger::before {
-        transform: rotate(90deg);
-        top: 0;
-    }
-
-    .nav-toggle.active .hamburger::after {
-        transform: rotate(90deg);
-        top: 0;
-    }
-
-    .hero {
-        height: 80vh;
-    }
-
-    section {
-        padding: 3rem 0;
-    }
-    
-    .footer .container {
-        flex-direction: column;
-    }
-    
-    .carousel-btn {
-        display: none;
-    }
-    .carousel-container {
-        padding: 0;
-    }
-}
-/* --- Reset e Variáveis --- */
-/* (Todo o código CSS anterior permanece o mesmo, sem alterações) */
-/* ... */
-
-
-/* --- Responsividade (Mobile-First) --- */
-@media (max-width: 768px) {
-    :root {
-        --container-padding: 0 1rem;
-    }
-
-    h1 {
-        font-size: 2.5rem;
-    }
-
-    h2 {
-        font-size: 2rem;
-    }
-
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 70%;
-        height: 100vh;
-        background-color: var(--secondary-color);
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transition: right 0.5s ease-in-out;
-        gap: 2rem;
-    }
-
-    .nav-menu.active {
-        right: 0;
-    }
-
-    .nav-toggle {
-        display: block;
-        z-index: 1001;
-    }
-
-    .nav-toggle.active .hamburger {
-        transform: rotate(45deg);
-    }
-
-    .nav-toggle.active .hamburger::before {
-        transform: rotate(90deg);
-        top: 0;
-    }
-
-    .nav-toggle.active .hamburger::after {
-        transform: rotate(90deg);
-        top: 0;
-    }
-
-    .hero {
-        height: 80vh;
-    }
-
-    section {
-        padding: 3rem 0;
-    }
-    
-    .footer .container {
-        flex-direction: column;
-    }
-    
-    .carousel-btn {
-        display: none;
-    }
-    .carousel-container {
-        padding: 0;
-    }
-}
-
-/* --- ESTILOS DA PÁGINA DE CHECKOUT (NOVO BLOCO) --- */
-.checkout-section {
-    padding: 8rem 0 4rem;
-    min-height: 80vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-}
-.checkout-wrapper {
+.success-container {
     background-color: var(--card-background);
     padding: 3rem;
     border-radius: 8px;
-    width: 100%;
-    max-width: 900px;
-    border-top: 5px solid var(--primary-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    display: flex;
-    gap: 3rem;
-    flex-wrap: wrap;
+    border-top: 5px solid #28a745; /* Verde sucesso */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    max-width: 600px;
 }
-.checkout-form, .order-summary {
-    flex: 1;
-}
-.checkout-form {
-    min-width: 300px;
-}
-.order-summary {
-    background-color: #111;
-    padding: 2rem;
-    border-radius: 8px;
-    min-width: 280px;
-}
-.summary-item {
-    display: flex;
-    justify-content: space-between;
+.success-container h1 {
+    color: #28a745;
     margin-bottom: 1rem;
-    color: #ccc;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #333;
 }
-.summary-total {
-    display: flex;
-    justify-content: space-between;
-    font-size: 1.2rem;
+.success-container p {
+    font-size: 1.1rem;
+    color: #ccc;
+    line-height: 1.6;
+}
+.order-number {
     font-weight: bold;
-    margin-top: 1.5rem;
-    color: #fff;
+    color: var(--primary-color);
+    font-size: 1.2rem;
 }
-
-/* Estilos do Modal PIX (já faz parte da página de checkout) */
-.pix-modal-content {
-    background-color: #2a2a2a;
-    padding: 2rem;
-    border-radius: 8px;
-    text-align: center;
-    width: 100%;
-    max-width: 400px;
-    border-top: 5px solid var(--primary-color);
+.success-section .cta-button {
+    margin-top: 2rem;
+    display: inline-block;
+    padding: 0.8rem 2rem;
 }
-.pix-modal-content h3 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-}
-.pix-modal-content img {
-    max-width: 250px;
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
-.pix-key-wrapper {
-    background-color: #1f1f1f;
-    padding: 1rem;
-    border-radius: 5px;
-    word-wrap: break-word;
-    margin-bottom: 1.5rem;
-    text-align: left;
-}
-#pixKey {
-    color: #ccc;
-    font-family: monospace;
-    font-size: 0.9rem;
-}
-.copy-button {
-    width: 100%;
-    padding: 0.8rem;
+.success-section .cta-button.secondary {
     background-color: #555;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 1.5rem;
+    margin-left: 1rem;
 }
-.copy-button:hover {
+.success-section .cta-button.secondary:hover {
     background-color: #777;
 }
 
-/* Responsividade específica do checkout */
+/* ==========================================================================
+   8. FOOTER
+   ========================================================================== */
+.footer {
+    background-color: var(--secondary-color);
+    padding: 2rem 0;
+    text-align: center;
+}
+.footer .container { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.social-links { display: flex; gap: 1.5rem; }
+.social-links a { color: var(--text-color); text-decoration: none; transition: color 0.3s ease; }
+.social-links a:hover { color: var(--primary-color); }
+
+/* ==========================================================================
+   9. RESPONSIVIDADE (Mobile-First)
+   ========================================================================== */
 @media (max-width: 768px) {
-    .checkout-wrapper {
-        flex-direction: column;
-        padding: 2rem;
+    :root { --container-padding: 0 1rem; }
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    .nav-menu {
+        position: fixed; top: 0; right: -100%; width: 70%; height: 100vh;
+        background-color: var(--secondary-color);
+        flex-direction: column; justify-content: center; align-items: center;
+        transition: right 0.5s ease-in-out; gap: 2rem;
     }
+    .nav-menu.active { right: 0; }
+    .nav-toggle { display: block; z-index: 1001; }
+    .nav-toggle.active .hamburger { transform: rotate(45deg); }
+    .nav-toggle.active .hamburger::before { transform: rotate(90deg); top: 0; }
+    .nav-toggle.active .hamburger::after { transform: rotate(90deg); top: 0; }
+    .hero { height: 80vh; }
+    section { padding: 3rem 0; }
+    .footer .container { flex-direction: column; }
+    .carousel-btn { display: none; }
+    .carousel-container { padding: 0; }
+    .checkout-wrapper { flex-direction: column; padding: 2rem; }
 }

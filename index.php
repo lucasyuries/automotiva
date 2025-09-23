@@ -42,6 +42,7 @@ if (isset($_SESSION['contact_status'])) {
                     <li><a href="#depoimentos">Depoimentos</a></li>
                     <li><a href="#contato">Contato</a></li>
                     <?php if (isset($_SESSION['id_usuario'])): ?>
+                        <li><a href="meus_pedidos.php">Meus Pedidos</a></li>
                         <li><a href="logout.php?action=logout">Sair</a></li>
                         <li class="user-greeting">Olá, <?php echo htmlspecialchars(explode(' ', $_SESSION['nome_usuario'])[0]); ?></li>
                     <?php else: ?>
