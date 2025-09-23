@@ -1,0 +1,5 @@
+# Arquivo de variáveis de ambiente - NUNCA ENVIAR!
+.env
+
+# Pasta de dependências do Composer
+vendor/
