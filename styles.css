@@ -1,7 +1,7 @@
 /* --- Reset e Variáveis --- */
 :root {
-    --primary-color: #E50914; /* Vermelho Netflix */
-    --secondary-color: #141414; /* Preto */
+    --primary-color: #E50914;
+    --secondary-color: #141414;
     --text-color: #f5f5f1;
     --background-color: #000;
     --container-padding: 0 2rem;
@@ -57,7 +57,7 @@ section {
     width: 100%;
     top: 0;
     z-index: 1000;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, padding 0.3s ease;
 }
 
 .header .container {
@@ -126,10 +126,6 @@ section {
 
 .nav-menu a:hover {
     color: var(--primary-color);
-}
-
-.nav-menu a:hover::after {
-    width: 100%;
 }
 
 .nav-toggle {
@@ -205,12 +201,9 @@ section {
 }
 
 /* --- Seções --- */
-.services-grid, .products-grid, .testimonials-grid {
+.testimonials-grid {
     display: grid;
     gap: 2rem;
-}
-
-.services-grid {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
@@ -225,10 +218,6 @@ section {
 .service-card:hover, .product-card:hover, .testimonial-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .product-card img {
@@ -252,10 +241,6 @@ section {
 .about .container {
     max-width: 800px;
     text-align: center;
-}
-
-.testimonials-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .testimonial-card footer {
@@ -321,7 +306,7 @@ section {
 
 /* --- Seção de Formulários (Login/Registro) --- */
 .form-section {
-    padding: 8rem 0 4rem; /* Espaçamento para o header fixo */
+    padding: 8rem 0 4rem;
     min-height: 80vh;
     display: flex;
     align-items: center;
@@ -411,6 +396,120 @@ section {
     border: 1px solid rgba(34, 139, 34, 0.5);
 }
 
+/* --- Estilos Reutilizáveis para Carrosséis --- */
+.carousel-container {
+    position: relative;
+    padding: 0 40px;
+}
+
+.carousel {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel .service-card,
+.carousel .product-card {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
+}
+
+.carousel .product-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.carousel .product-card img:hover {
+    transform: scale(1.05);
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background-color: var(--primary-color);
+}
+
+.carousel-btn.prev {
+    left: -10px;
+}
+
+.carousel-btn.next {
+    right: -10px;
+}
+
+/* --- ESTILOS PARA O MODAL DE IMAGEM --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 80vh;
+    animation: zoomIn 0.3s ease-in-out;
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: var(--primary-color);
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
 /* --- Responsividade (Mobile-First) --- */
 @media (max-width: 768px) {
     :root {
@@ -445,7 +544,7 @@ section {
 
     .nav-toggle {
         display: block;
-        z-index: 1001; /* Acima do menu */
+        z-index: 1001;
     }
 
     .nav-toggle.active .hamburger {
@@ -472,5 +571,12 @@ section {
     
     .footer .container {
         flex-direction: column;
+    }
+    
+    .carousel-btn {
+        display: none;
+    }
+    .carousel-container {
+        padding: 0;
     }
 }

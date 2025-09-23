@@ -1,80 +1,6 @@
 <?php
 session_start();
 require_once 'config.php';
-
-// Lógica para ATUALIZAR a quantidade do produto
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_quantity'])) {
-    $product_id = $_POST['product_id'];
-    $action = $_POST['action'];
-
-    if (isset($_SESSION['cart'][$product_id])) {
-        if ($action == 'increase') {
-            $_SESSION['cart'][$product_id]['quantity']++;
-        } elseif ($action == 'decrease') {
-            $_SESSION['cart'][$product_id]['quantity']--;
-            if ($_SESSION['cart'][$product_id]['quantity'] <= 0) {
-                unset($_SESSION['cart'][$product_id]);
-            }
-        }
-    }
-    header("Location: carrinho.php");
-    exit;
-}
-
-// Lógica para REMOVER produto do carrinho
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remove_item'])) {
-    $product_id = $_POST['product_id'];
-    if (isset($_SESSION['cart'][$product_id])) {
-        unset($_SESSION['cart'][$product_id]);
-    }
-    header("Location: carrinho.php");
-    exit;
-}
-
-// Lógica para adicionar produto ao carrinho
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_cart'])) {
-    $product_id = $_POST['product_id'];
-
-    if (!isset($_SESSION['cart'])) {
-        $_SESSION['cart'] = [];
-    }
-
-    // Adiciona o produto ao carrinho (ou incrementa a quantidade)
-    if (isset($_SESSION['cart'][$product_id])) {
-        $_SESSION['cart'][$product_id]['quantity']++;
-    } else {
-        // Busca informações do produto no banco
-        $sql = "SELECT id, nome, preco, imagem_url FROM produtos WHERE id = ?";
-        if ($stmt = mysqli_prepare($link, $sql)) {
-            mysqli_stmt_bind_param($stmt, "i", $product_id);
-            if (mysqli_stmt_execute($stmt)) {
-                $result = mysqli_stmt_get_result($stmt);
-                if (mysqli_num_rows($result) == 1) {
-                    $product = mysqli_fetch_assoc($result);
-                    $_SESSION['cart'][$product_id] = [
-                        "id" => $product['id'],
-                        "name" => $product['nome'],
-                        "price" => $product['preco'],
-                        "image" => $product['imagem_url'],
-                        "quantity" => 1
-                    ];
-                }
-            }
-            mysqli_stmt_close($stmt);
-        }
-    }
-    // Redireciona para a mesma página para evitar reenvio do formulário
-    header("Location: carrinho.php");
-    exit;
-}
-
-// Lógica para limpar o carrinho
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
-    $_SESSION['cart'] = [];
-    header("Location: carrinho.php");
-    exit;
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -87,8 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* (nenhuma mudança no CSS) */
         .cart-section {
-            padding-top: 120px; /* Espaço para o header fixo */
+            padding-top: 120px;
+            padding-bottom: 4rem;
         }
         .cart-container {
             display: grid;
@@ -98,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
         }
         .products-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
         }
         .product-card {
@@ -106,8 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
         }
         .product-card img {
             width: 100%;
-            height: 200px; /* Altura fixa para todas as imagens */
-            object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+            height: 250px;
+            object-fit: cover;
             border-radius: 5px;
             margin-bottom: 1rem;
         }
@@ -124,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
             align-items: center;
             margin-bottom: 1rem;
             flex-wrap: wrap;
+            gap: 1rem;
         }
         .cart-item img {
             width: 60px;
@@ -140,22 +69,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
             align-items: center;
         }
         .quantity-controls button {
-            background: #ddd;
+            background: #444;
+            color: #fff;
             border: none;
             width: 30px;
             height: 30px;
             cursor: pointer;
             border-radius: 50%;
+            font-size: 1.2rem;
+            line-height: 1;
         }
         .quantity-controls span {
             padding: 0 1rem;
+            font-weight: 500;
         }
         .remove-btn {
             background: none;
             border: none;
-            color: #c00000;
+            color: #E50914;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             margin-left: 1rem;
         }
         .cart-total {
@@ -163,6 +96,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
             font-size: 1.2rem;
             font-weight: bold;
             text-align: right;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
         }
         .empty-cart-btn {
             background-color: #555;
@@ -173,12 +108,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
             background-color: #777;
         }
         .checkout-btn {
-            background-color: #c00000;
+            background-color: var(--primary-color);
             margin-top: 1rem;
             width: 100%;
         }
         .checkout-btn:hover {
-            background-color: #a00000;
+            background-color: #ff0a16;
         }
         .cart-actions {
             margin-top: 2rem;
@@ -186,14 +121,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
             flex-direction: column;
             gap: 1rem;
         }
-
-        /* --- Responsividade para o Carrinho --- */
         @media (max-width: 992px) {
             .cart-container {
-                grid-template-columns: 1fr; /* Coluna única em telas menores */
+                grid-template-columns: 1fr;
             }
             .cart-summary {
-                position: static; /* Remove o comportamento fixo */
+                position: static;
                 margin-top: 2rem;
             }
         }
@@ -211,11 +144,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
                 <ul class="nav-menu">
                     <li><a href="index.php#servicos">Serviços</a></li>
                     <li><a href="index.php#produtos">Produtos</a></li>
-                    <li><a href="index.php#sobre">Sobre Nós</a></li>
-                    <li><a href="index.php#depoimentos">Depoimentos</a></li>
-                    <li><a href="index.php#contato">Contato</a></li>
                     <?php if (isset($_SESSION['id_usuario'])): ?>
-                        <li><a href="logout.php">Sair</a></li>
+                        <li><a href="logout.php?action=logout">Sair</a></li>
                         <li class="user-greeting">Olá, <?php echo htmlspecialchars(explode(' ', $_SESSION['nome_usuario'])[0]); ?></li>
                     <?php else: ?>
                         <li><a href="login.php">Login</a></li>
@@ -229,81 +159,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
     <main>
         <section class="cart-section">
             <div class="container">
-                <h2>Nossos Produtos</h2>
-                <div class="cart-container">
-                    <div class="products-list">
-                        <?php
-                        // Busca todos os produtos no banco de dados
-                        $sql = "SELECT id, nome, descricao, preco, imagem_url FROM produtos ORDER BY nome ASC";
-                        if($result = mysqli_query($link, $sql)){
-                            if(mysqli_num_rows($result) > 0){
-                                while($row = mysqli_fetch_array($result)){
-                                    echo '<article class="product-card">';
-                                    echo '    <img src="' . htmlspecialchars($row['imagem_url']) . '" alt="' . htmlspecialchars($row['nome']) . '">';
-                                    echo '    <h3>' . htmlspecialchars($row['nome']) . '</h3>';
-                                    echo '    <p>' . htmlspecialchars($row['descricao']) . '</p>';
-                                    echo '    <span class="price">R$ ' . number_format($row['preco'], 2, ',', '.') . '</span>';
-                                    echo '    <form method="post" action="carrinho.php">';
-                                    echo '        <input type="hidden" name="product_id" value="' . $row['id'] . '">';
-                                    echo '        <button type="submit" name="add_to_cart" class="cta-button">Adicionar ao Carrinho</button>';
-                                    echo '    </form>';
-                                    echo '</article>';
+                <div class="cart-container" id="cart-page-container">
+                    <div>
+                        <h2>Nossos Produtos</h2>
+                        <div class="products-list">
+                            <?php
+                            try {
+                                $sql = "SELECT id, nome, descricao, preco, imagem_url FROM produtos ORDER BY nome ASC";
+                                $stmt = $pdo->query($sql);
+                                
+                                if($stmt->rowCount() > 0){
+                                    while($row = $stmt->fetch()){
+                                        echo '<article class="product-card">';
+                                        echo '    <img src="' . htmlspecialchars($row['imagem_url']) . '" alt="' . htmlspecialchars($row['nome']) . '">';
+                                        echo '    <h3>' . htmlspecialchars($row['nome']) . '</h3>';
+                                        echo '    <p>' . htmlspecialchars($row['descricao']) . '</p>';
+                                        echo '    <span class="price">R$ ' . number_format($row['preco'], 2, ',', '.') . '</span>';
+                                        // O botão agora tem atributos 'data-*' para o JS e não está mais dentro de um form
+                                        echo '    <button class="cta-button cart-action-btn" data-product-id="' . $row['id'] . '" data-action="add">Adicionar ao Carrinho</button>';
+                                        echo '</article>';
+                                    }
+                                } else {
+                                    echo "<p>Nenhum produto encontrado.</p>";
                                 }
-                                mysqli_free_result($result);
-                            } else{
-                                echo "<p>Nenhum produto encontrado.</p>";
+                            } catch (PDOException $e) {
+                                echo "ERRO: Não foi possível buscar os produtos. " . $e->getMessage();
                             }
-                        } else{
-                            echo "ERRO: Não foi possível executar $sql. " . mysqli_error($link);
-                        }
-                        ?>
+                            ?>
+                        </div>
                     </div>
 
                     <aside class="cart-summary">
                         <h3>Resumo do Carrinho</h3>
-                        <?php if (empty($_SESSION['cart'])): ?>
-                            <p>Seu carrinho está vazio.</p>
-                        <?php else: ?>
-                            <?php
-                            $total = 0;
-                            foreach ($_SESSION['cart'] as $id => $item):
-                                $total += $item['price'] * $item['quantity'];
-                            ?>
-                                <div class="cart-item">
-                                    <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>">
-                                    <div class="cart-item-info">
-                                        <span><?= htmlspecialchars($item['name']) ?></span><br>
-                                        <span>R$ <?= number_format($item['price'], 2, ',', '.') ?></span>
+                        <div id="cart-summary-container">
+                            <?php if (empty($_SESSION['cart'])): ?>
+                                <p>Seu carrinho está vazio.</p>
+                            <?php else: ?>
+                                <?php
+                                $total = 0;
+                                foreach ($_SESSION['cart'] as $id => $item):
+                                    $total += $item['price'] * $item['quantity'];
+                                ?>
+                                    <div class="cart-item">
+                                        <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>">
+                                        <div class="cart-item-info">
+                                            <span><?= htmlspecialchars($item['name']) ?></span><br>
+                                            <small>R$ <?= number_format($item['price'], 2, ',', '.') ?></small>
+                                        </div>
+                                        <div class="quantity-controls">
+                                            <button class="cart-action-btn" data-product-id="<?= $id ?>" data-action="decrease">-</button>
+                                            <span><?= $item['quantity'] ?></span>
+                                            <button class="cart-action-btn" data-product-id="<?= $id ?>" data-action="increase">+</button>
+                                        </div>
+                                        <button class="cart-action-btn remove-btn" data-product-id="<?= $id ?>" data-action="remove" title="Remover item">&times;</button>
                                     </div>
-                                    <div class="quantity-controls">
-                                        <form method="post" action="carrinho.php" style="display: inline;">
-                                            <input type="hidden" name="product_id" value="<?= $id ?>">
-                                            <input type="hidden" name="action" value="decrease">
-                                            <button type="submit" name="update_quantity">-</button>
-                                        </form>
-                                        <span><?= $item['quantity'] ?></span>
-                                        <form method="post" action="carrinho.php" style="display: inline;">
-                                            <input type="hidden" name="product_id" value="<?= $id ?>">
-                                            <input type="hidden" name="action" value="increase">
-                                            <button type="submit" name="update_quantity">+</button>
-                                        </form>
-                                    </div>
-                                    <form method="post" action="carrinho.php">
-                                        <input type="hidden" name="product_id" value="<?= $id ?>">
-                                        <button type="submit" name="remove_item" class="remove-btn" title="Remover item">&times;</button>
-                                    </form>
+                                <?php endforeach; ?>
+                                <div class="cart-total">
+                                    Total: R$ <?= number_format($total, 2, ',', '.') ?>
                                 </div>
-                            <?php endforeach; ?>
-                            <div class="cart-total">
-                                Total: R$ <?= number_format($total, 2, ',', '.') ?>
-                            </div>
-                            <div class="cart-actions">
-                                <a href="checkout.php" class="cta-button checkout-btn">Finalizar Compra</a>
-                                <form method="post" action="carrinho.php">
-                                    <button type="submit" name="clear_cart" class="cta-button empty-cart-btn">Limpar Carrinho</button>
-                                </form>
-                            </div>
-                        <?php endif; ?>
+                                <div class="cart-actions">
+                                    <a href="checkout.php" class="cta-button checkout-btn">Finalizar Compra</a>
+                                    <button class="cta-button empty-cart-btn cart-action-btn" data-action="clear">Limpar Carrinho</button>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </aside>
                 </div>
             </div>
@@ -311,10 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clear_cart'])) {
     </main>
 
     <footer class="footer">
-        <div class="container">
-            <p>&copy; <?php echo date("Y"); ?> Automotiva. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+       </footer>
 
     <script src="script.js"></script>
 </body>
