@@ -52,8 +52,10 @@ require_once 'config.php';
                                 
                                 if($stmt->rowCount() > 0){
                                     while($row = $stmt->fetch()){
+                                        $imageUrl = htmlspecialchars($row['imagem_url']);
                                         echo '<article class="product-card">';
-                                        echo '    <img src="' . htmlspecialchars($row['imagem_url']) . '" alt="' . htmlspecialchars($row['nome']) . '">';
+                                        // AQUI A MUDANÇA: Adicionada a classe e o atributo data-src
+                                        echo '    <img src="' . $imageUrl . '" alt="' . htmlspecialchars($row['nome']) . '" class="carousel-image" data-src="' . $imageUrl . '">';
                                         echo '    <h3>' . htmlspecialchars($row['nome']) . '</h3>';
                                         echo '    <p>' . htmlspecialchars($row['descricao']) . '</p>';
                                         echo '    <span class="price">R$ ' . number_format($row['preco'], 2, ',', '.') . '</span>';
@@ -115,6 +117,11 @@ require_once 'config.php';
             <p>&copy; <?php echo date("Y"); ?> Automotiva. Todos os direitos reservados.</p>
         </div>
     </footer>
+
+    <div id="imageModal" class="modal">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
 
     <script src="script.js"></script>
 </body>
