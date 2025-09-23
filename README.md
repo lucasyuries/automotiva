@@ -1,5 +1,5 @@
 # Projeto Automotiva 🚗
-
+Discente: Lucas Yuri Evangelista Sagica
 ### Um E-commerce Completo para Estética Automotiva
 
 **Automotiva** é um projeto acadêmico que simula um site de e-commerce completo para uma empresa fictícia de estética automotiva. O sistema foi desenvolvido com foco em funcionalidades essenciais de uma loja virtual, utilizando PHP puro para o backend e uma abordagem de componentização e organização de código para garantir a manutenibilidade e a segurança.
