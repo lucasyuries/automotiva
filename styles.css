@@ -580,3 +580,183 @@ section {
         padding: 0;
     }
 }
+/* --- Reset e Variáveis --- */
+/* (Todo o código CSS anterior permanece o mesmo, sem alterações) */
+/* ... */
+
+
+/* --- Responsividade (Mobile-First) --- */
+@media (max-width: 768px) {
+    :root {
+        --container-padding: 0 1rem;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        background-color: var(--secondary-color);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: right 0.5s ease-in-out;
+        gap: 2rem;
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+
+    .nav-toggle {
+        display: block;
+        z-index: 1001;
+    }
+
+    .nav-toggle.active .hamburger {
+        transform: rotate(45deg);
+    }
+
+    .nav-toggle.active .hamburger::before {
+        transform: rotate(90deg);
+        top: 0;
+    }
+
+    .nav-toggle.active .hamburger::after {
+        transform: rotate(90deg);
+        top: 0;
+    }
+
+    .hero {
+        height: 80vh;
+    }
+
+    section {
+        padding: 3rem 0;
+    }
+    
+    .footer .container {
+        flex-direction: column;
+    }
+    
+    .carousel-btn {
+        display: none;
+    }
+    .carousel-container {
+        padding: 0;
+    }
+}
+
+/* --- ESTILOS DA PÁGINA DE CHECKOUT (NOVO BLOCO) --- */
+.checkout-section {
+    padding: 8rem 0 4rem;
+    min-height: 80vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.checkout-wrapper {
+    background-color: var(--card-background);
+    padding: 3rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 900px;
+    border-top: 5px solid var(--primary-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+.checkout-form, .order-summary {
+    flex: 1;
+}
+.checkout-form {
+    min-width: 300px;
+}
+.order-summary {
+    background-color: #111;
+    padding: 2rem;
+    border-radius: 8px;
+    min-width: 280px;
+}
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: #ccc;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #333;
+}
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    color: #fff;
+}
+
+/* Estilos do Modal PIX (já faz parte da página de checkout) */
+.pix-modal-content {
+    background-color: #2a2a2a;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    border-top: 5px solid var(--primary-color);
+}
+.pix-modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+.pix-modal-content img {
+    max-width: 250px;
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+.pix-key-wrapper {
+    background-color: #1f1f1f;
+    padding: 1rem;
+    border-radius: 5px;
+    word-wrap: break-word;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+#pixKey {
+    color: #ccc;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+.copy-button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+.copy-button:hover {
+    background-color: #777;
+}
+
+/* Responsividade específica do checkout */
+@media (max-width: 768px) {
+    .checkout-wrapper {
+        flex-direction: column;
+        padding: 2rem;
+    }
+}

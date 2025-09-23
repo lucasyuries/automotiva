@@ -1,6 +1,18 @@
 <?php
 session_start();
 require_once 'config.php';
+
+// Verifica se há uma mensagem de status do formulário de contato
+$contact_message = '';
+if (isset($_SESSION['contact_status'])) {
+    if ($_SESSION['contact_status'] == 'success') {
+        $contact_message = '<div class="mensagem mensagem-sucesso">Sua mensagem foi enviada com sucesso! Entraremos em contato em breve.</div>';
+    } else {
+        $contact_message = '<div class="mensagem mensagem-erro">Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.</div>';
+    }
+    // Limpa a mensagem da sessão para que não apareça novamente
+    unset($_SESSION['contact_status']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -162,9 +174,13 @@ require_once 'config.php';
             <div class="container">
                 <h2>Entre em Contato</h2>
                 <p>Pronto para transformar seu carro? Fale conosco!</p>
+
+                <?php echo $contact_message; ?>
+
                 <form class="contact-form" action="enviar_contato.php" method="post">
                     <input type="text" name="name" placeholder="Seu Nome" required>
                     <input type="email" name="email" placeholder="Seu E-mail" required>
+                    <input type="tel" name="telefone" placeholder="Seu Telefone (Opcional)">
                     <textarea name="message" placeholder="Sua Mensagem" rows="5" required></textarea>
                     <button type="submit" class="cta-button">Enviar Mensagem</button>
                 </form>

@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS pedidos (
     id_usuario INT NOT NULL,
     data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     valor_total DECIMAL(10, 2) NOT NULL,
-    metodo_pagamento VARCHAR(50) NOT NULL,
+    metodo_pagamento VARCHAR(50) NOT NULL, -- MODIFICADO DE ENUM PARA VARCHAR
     status VARCHAR(50) DEFAULT 'Pendente',
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;

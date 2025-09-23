@@ -1,11 +1,9 @@
 <?php
 session_start();
-require_once 'config.php'; // Acesso à variável $pdo
+require_once 'config.php';
 
-// Define o cabeçalho da resposta como JSON
 header('Content-Type: application/json');
 
-// --- Lógica Principal ---
 $action = $_POST['action'] ?? null;
 $product_id = $_POST['product_id'] ?? null;
 
@@ -13,7 +11,6 @@ if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Executa a ação solicitada
 switch ($action) {
     case 'add':
         if ($product_id) {
@@ -66,7 +63,6 @@ switch ($action) {
         break;
 }
 
-// --- Gera o HTML do carrinho atualizado ---
 $total = 0;
 $cart_html = '';
 
@@ -106,10 +102,9 @@ HTML;
 HTML;
 }
 
-// Retorna os dados como JSON
 echo json_encode([
     'cart_html' => $cart_html,
-    'item_count' => count($_SESSION['cart']) // Podemos usar no futuro para um contador no header
+    'item_count' => count($_SESSION['cart'])
 ]);
 
 exit();

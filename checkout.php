@@ -2,20 +2,20 @@
 session_start();
 require_once 'config.php';
 
-// 1. Proteger a página: verificar se o usuário está logado
+// Protege a página: verificar se o usuário está logado
 if (!isset($_SESSION['id_usuario'])) {
     $_SESSION['redirect_to_checkout'] = true;
     header('Location: login.php');
     exit();
 }
 
-// 2. Verificar se o carrinho não está vazio
+// Verificar se o carrinho não está vazio
 if (empty($_SESSION['cart'])) {
     header('Location: carrinho.php');
     exit();
 }
 
-// 3. Buscar os dados do usuário logado para preencher o formulário
+// Buscar os dados do usuário logado para preencher o formulário
 $id_usuario = $_SESSION['id_usuario'];
 $stmt = $pdo->prepare("SELECT nome, email, endereco, data_nascimento FROM usuarios WHERE id = ?");
 $stmt->execute([$id_usuario]);
@@ -38,72 +38,6 @@ if (!$usuario) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Estilos específicos para o checkout, alinhados com o design do site */
-        .checkout-section {
-            padding: 8rem 0 4rem;
-            min-height: 80vh;
-            display: flex;
-            align-items: flex-start; /* Alinha no topo */
-            justify-content: center;
-        }
-        .checkout-wrapper {
-            background-color: var(--card-background);
-            padding: 3rem;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 900px; /* Aumenta a largura para acomodar as duas colunas */
-            border-top: 5px solid var(--primary-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            display: flex;
-            gap: 3rem;
-            flex-wrap: wrap; /* Permite quebrar em telas menores */
-        }
-        .checkout-form, .order-summary {
-            flex: 1; /* Permite que ambos os containers cresçam */
-        }
-        .checkout-form {
-            min-width: 300px; /* Largura mínima para o formulário */
-        }
-        .order-summary {
-            background-color: #111; /* Um pouco mais escuro para destacar */
-            padding: 2rem;
-            border-radius: 8px;
-            min-width: 280px;
-        }
-        h1, h2, h3, h4 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-        }
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            color: #ccc;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #333;
-        }
-        .summary-total {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-top: 1.5rem;
-            color: #fff;
-        }
-        .cta-button {
-            width: 100%;
-            margin-top: 2rem;
-            font-size: 1.1rem;
-        }
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .checkout-wrapper {
-                flex-direction: column;
-                padding: 2rem;
-            }
-        }
-    </style>
 </head>
 <body>
 
@@ -131,6 +65,8 @@ if (!$usuario) {
                 <div class="checkout-form">
                     <h2>Finalizar Pedido</h2>
                     <form id="checkout-form" action="finalizar_pedido.php" method="POST">
+                        <input type="hidden" name="metodo_pagamento" value="pix">
+                        
                         <h4>Seus Dados</h4>
                         <div class="form-group">
                             <label for="nome">Nome Completo</label>
@@ -151,12 +87,8 @@ if (!$usuario) {
 
                         <h4>Pagamento</h4>
                         <div class="form-group">
-                            <label for="metodo_pagamento">Forma de Pagamento</label>
-                            <input type="text" list="payment-methods" id="metodo_pagamento" name="metodo_pagamento" required />
-                            <datalist id="payment-methods">
-                                <option value="À Vista (Boleto/Pix)">
-                                <option value="Cartão de Crédito">
-                            </datalist>
+                            <label>Forma de Pagamento</label>
+                            <input type="text" value="PIX" readonly>
                         </div>
                     </form>
                 </div>
@@ -165,24 +97,19 @@ if (!$usuario) {
                     <h3>Resumo do Pedido</h3>
                     <?php
                     $total = 0;
-                    foreach ($_SESSION['cart'] as $item):
+                    foreach ($_SESSION['cart'] as $item){
                         $subtotal = $item['price'] * $item['quantity'];
                         $total += $subtotal;
+                        echo '<div class="summary-item"><span>' . htmlspecialchars($item['name']) . ' (x' . $item['quantity'] . ')</span><span>R$ ' . number_format($subtotal, 2, ',', '.') . '</span></div>';
+                    }
                     ?>
-                    <div class="summary-item">
-                        <span><?= htmlspecialchars($item['name']) ?> (x<?= $item['quantity'] ?>)</span>
-                        <span>R$ <?= number_format($subtotal, 2, ',', '.') ?></span>
-                    </div>
-                    <?php endforeach; ?>
-
                     <div class="summary-total">
                         <span>Total</span>
                         <span>R$ <?= number_format($total, 2, ',', '.') ?></span>
                     </div>
 
-                    <button type="submit" form="checkout-form" class="cta-button">Confirmar e Pagar</button>
+                    <button type="button" id="openPixModal" class="cta-button">Confirmar e Pagar com PIX</button>
                 </aside>
-
             </div>
         </section>
     </main>
@@ -193,5 +120,22 @@ if (!$usuario) {
         </div>
     </footer>
 
+    <div id="pixModal" class="modal">
+        <div class="pix-modal-content">
+            <span class="close-modal" id="closePixModal">&times;</span>
+            <h3>Pague com PIX para concluir</h3>
+            <p>Escaneie o QR Code com o app do seu banco:</p>
+            <img src="pix-qrcode.png" alt="QR Code PIX">
+            <p>Ou use o PIX Copia e Cola:</p>
+            <div class="pix-key-wrapper">
+                <span id="pixKey">00020126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-4266141740005204000053039865802BR5913NOME DO LOJISTA6009SAO PAULO62070503***6304E2A4</span>
+            </div>
+            <button type="button" class="copy-button" id="copyPixKey">Copiar Chave</button>
+
+            <button type="submit" form="checkout-form" class="cta-button">Já Paguei, Finalizar Pedido</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
 </body>
 </html>

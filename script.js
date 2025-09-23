@@ -122,4 +122,44 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- LÓGICA PARA O MODAL DE PAGAMENTO PIX ---
+    const pixModal = document.getElementById('pixModal');
+    const openPixModalBtn = document.getElementById('openPixModal');
+    const closePixModalBtn = document.getElementById('closePixModal');
+
+    if (pixModal && openPixModalBtn && closePixModalBtn) {
+
+        openPixModalBtn.addEventListener('click', () => {
+            pixModal.classList.add('active');
+        });
+
+        function closePixM() {
+            pixModal.classList.remove('active');
+        }
+
+        closePixModalBtn.addEventListener('click', closePixM);
+
+        pixModal.addEventListener('click', (event) => {
+            if (event.target === pixModal) {
+                closePixM();
+            }
+        });
+
+        const copyPixKeyBtn = document.getElementById('copyPixKey');
+        const pixKeyText = document.getElementById('pixKey').innerText;
+
+        copyPixKeyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(pixKeyText).then(() => {
+                const originalText = copyPixKeyBtn.innerText;
+                copyPixKeyBtn.innerText = 'Copiado!';
+                setTimeout(() => {
+                    copyPixKeyBtn.innerText = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Erro ao copiar a chave PIX: ', err);
+                alert('Não foi possível copiar a chave.');
+            });
+        });
+    }
 });

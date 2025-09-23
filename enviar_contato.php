@@ -5,50 +5,47 @@ require_once 'config.php'; // Inclui a conexão com o banco ($pdo)
 // Verifica se o formulário foi enviado usando o método POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Pega os dados do formulário e remove espaços em branco extras
+    // Pega os dados do formulário
     $nome = trim($_POST['name']);
     $email = trim($_POST['email']);
+    $telefone = !empty($_POST['telefone']) ? trim($_POST['telefone']) : null; // Pega o telefone, se existir
     $mensagem = trim($_POST['message']);
 
-    // Validação simples para garantir que os campos não estão vazios
+    // Validação
     if (!empty($nome) && !empty($email) && !empty($mensagem) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
         
         try {
-            // Prepara a instrução SQL para inserir os dados de forma segura
-            $sql = "INSERT INTO contatos (nome, email, mensagem) VALUES (:nome, :email, :mensagem)";
+            // Prepara a instrução SQL com o novo campo 'telefone'
+            $sql = "INSERT INTO contatos (nome, email, telefone, mensagem) VALUES (:nome, :email, :telefone, :mensagem)";
             $stmt = $pdo->prepare($sql);
 
-            // Associa os parâmetros da instrução SQL com as variáveis
+            // Associa os parâmetros
             $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':telefone', $telefone, PDO::PARAM_STR); // Associa o novo parâmetro
             $stmt->bindParam(':mensagem', $mensagem, PDO::PARAM_STR);
 
-            // Executa a instrução
+            // Executa
             if ($stmt->execute()) {
-                // Se a inserção for bem-sucedida, cria uma mensagem de sucesso na sessão
                 $_SESSION['contact_status'] = 'success';
             } else {
-                // Se falhar, cria uma mensagem de erro
                 $_SESSION['contact_status'] = 'error';
             }
 
         } catch (PDOException $e) {
-            // Em caso de erro de banco de dados, cria uma mensagem de erro
             $_SESSION['contact_status'] = 'error';
-            // Em um ambiente de produção, seria bom logar o erro: error_log($e->getMessage());
         }
 
     } else {
-        // Se a validação dos campos falhar, cria uma mensagem de erro
         $_SESSION['contact_status'] = 'validation_error';
     }
 
-    // Redireciona o usuário de volta para a seção de contato da página inicial
+    // Redireciona o usuário de volta para a seção de contato
     header("Location: index.php#contato");
     exit();
 
 } else {
-    // Se alguém tentar acessar este arquivo diretamente, redireciona para a página inicial
+    // Redireciona para a página inicial
     header("Location: index.php");
     exit();
 }

@@ -13,7 +13,6 @@ require_once 'config.php';
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* (nenhuma mudança no CSS) */
         .cart-section {
             padding-top: 120px;
             padding-bottom: 4rem;
@@ -175,7 +174,6 @@ require_once 'config.php';
                                         echo '    <h3>' . htmlspecialchars($row['nome']) . '</h3>';
                                         echo '    <p>' . htmlspecialchars($row['descricao']) . '</p>';
                                         echo '    <span class="price">R$ ' . number_format($row['preco'], 2, ',', '.') . '</span>';
-                                        // O botão agora tem atributos 'data-*' para o JS e não está mais dentro de um form
                                         echo '    <button class="cta-button cart-action-btn" data-product-id="' . $row['id'] . '" data-action="add">Adicionar ao Carrinho</button>';
                                         echo '</article>';
                                     }
@@ -230,7 +228,10 @@ require_once 'config.php';
     </main>
 
     <footer class="footer">
-       </footer>
+       <div class="container">
+            <p>&copy; <?php echo date("Y"); ?> Automotiva. Todos os direitos reservados.</p>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
